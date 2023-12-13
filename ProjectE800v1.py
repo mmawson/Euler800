@@ -58,10 +58,8 @@ from multiprocessing import Process
 
 upper = 800800 ** 800800
 
-def solveC(i, data_array1, data_array2):
+def solveC(procNum, data_array1, data_array2):
     
-    table = open("800800Grail"+str(i)+".csv", "a")
-
     for i in range(0, len(data_array1)):
         data_array2.pop(0)
         for j in range(len(data_array2)-1,-1,-1):
@@ -69,12 +67,13 @@ def solveC(i, data_array1, data_array2):
                 continue
                 #totalCount += 1
             elif ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) <= upper):
+                table = open("800800Grail"+str(procNum)+".csv", "a")
                 table.writelines("{0}:{1}\n".format(data_array1[i],j+1))
+                table.close()
                 data_array2.pop(0)
                 data_array2.pop(0)
                 data_array2.pop(0)
                 break
-    table.close()
     return
 
 if __name__ == '__main__':
@@ -90,6 +89,8 @@ if __name__ == '__main__':
         data = [eval(i) for i in data[0]]
         data_array1 = data.copy()
         data_array2 = data.copy()
+        data_array1 = data_array1[0:128]
+        data_array2 = data_array2[1013000:1013277]
     
     p = Process(target=solveC, args=(1, data_array1[0::4], data_array2,))
     q = Process(target=solveC, args=(2, data_array1[1::4], data_array2[1::],))
