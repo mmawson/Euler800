@@ -93,8 +93,8 @@ if __name__ == '__main__':
     
     """ Split up the array of primes here """
     
-    with open('/Users/mattmawson/Desktop/Euler800/Primes-beta.csv', 'r') as f: 
-#    with open('/Users/mattmawson/Desktop/Euler800/PrimesUltra.csv', 'r') as f: 
+#    with open('/Users/mattmawson/Desktop/Euler800/Primes-beta.csv', 'r') as f: 
+    with open('/Users/mattmawson/Desktop/Euler800/PrimesUltra.csv', 'r') as f: 
         reader = csv.reader(f)
         data = list(reader)
         data = [eval(i) for i in data[0]]
