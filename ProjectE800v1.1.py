@@ -60,36 +60,30 @@ upper = 800800 ** 800800
 def solveC(procNum, data_array1, data_array2):
     
     for i in range(0, len(data_array1)):
+        loop_time = time.time()
         if len(data_array2) >= 1:
             data_array2.pop(0)
         if len(data_array2) == 0:
                break
         for j in range(len(data_array2)-1,-1,-1):
             if ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) > upper):
-                print("Proc "+str(procNum)+" Counting down: " +str(j))
+                #print("Proc "+str(procNum)+" Counting down: " +str(j))
                 data_array2.pop(j)
                 continue
                 #totalCount += 1
             elif ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) <= upper):
                 print("Proc "+str(procNum)+" writing to file!")
+                print("Writing a value --- %s seconds ---" % (time.time() - loop_time))
                 table = open("800800Grail"+str(procNum)+".csv", "a")
                 table.writelines("{0}:{1}\n".format(data_array1[i],j+1))
                 table.close()
-                if (len(data_array2) >= 3):
-                    data_array2.pop(0)
-                    data_array2.pop(0)
-                    data_array2.pop(0)
-                if (len(data_array2) == 2):
-                    data_array2.pop(0)
-                    data_array2.pop(0)
-                if (len(data_array2) == 1):
-                    data_array2.pop(0)
                 break
     return
 
+
 if __name__ == '__main__':
     
-    start_time = time.time()
+    begin_time = time.time()
     
     """ Split up the array of primes here """
     
@@ -101,12 +95,12 @@ if __name__ == '__main__':
         data_array1 = data.copy()
         data_array2 = data.copy()
         #data_array1 = data_array1[0:4]
-        data_array2 = data_array2[0:23190]
+        data_array2 = data_array2[0:664603]  #23190]
         
-    p = Process(target=solveC, args=(1, data_array1[0::4], data_array2,))
-    q = Process(target=solveC, args=(2, data_array1[1::4], data_array2[1::],))
-    r = Process(target=solveC, args=(3, data_array1[2::4], data_array2[2::],))
-    s = Process(target=solveC, args=(4, data_array1[3::4], data_array2[3::],))
+    p = Process(target=solveC, args=(1, data_array1[1::4], data_array2[1::],))
+    q = Process(target=solveC, args=(2, data_array1[2::4], data_array2[2::],))
+    r = Process(target=solveC, args=(3, data_array1[3::4], data_array2[3::],))
+    s = Process(target=solveC, args=(4, data_array1[4::4], data_array2[4::],))
     p.start()
     q.start()
     r.start()
@@ -115,7 +109,7 @@ if __name__ == '__main__':
     q.join()
     r.join()
     s.join()
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - begin_time))
         
     
 """ 
