@@ -53,33 +53,8 @@ Created on Thu Dec  7 11:07:31 2023
 
 import csv
 import time
-from multiprocessing import Process
 
 upper = 800800 ** 800800
-
-def solveC(procNum, data_array1, data_array2):
-    
-    for i in range(0, len(data_array1)):
-        loop_time = time.time()
-        if len(data_array2) >= 1:
-            data_array2.pop(0)
-        if len(data_array2) == 0:
-               break
-        for j in range(len(data_array2)-1,-1,-1):
-            if ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) > upper):
-                #print("Proc "+str(procNum)+" Counting down: " +str(j))
-                data_array2.pop(j)
-                continue
-                #totalCount += 1
-            elif ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) <= upper):
-                print("Proc "+str(procNum)+" writing to file!")
-                print("Writing a value --- %s seconds ---" % (time.time() - loop_time))
-                table = open("800800Grail"+str(procNum)+".csv", "a")
-                table.writelines("{0}:{1}\n".format(data_array1[i],j+1))
-                table.close()
-                break
-    return
-
 
 if __name__ == '__main__':
     
@@ -87,51 +62,32 @@ if __name__ == '__main__':
     
     """ Split up the array of primes here """
     
-#    with open('/Users/mattmawson/Desktop/Euler800/Primes-beta.csv', 'r') as f: 
-    with open('/Users/mattmawson/Desktop/Euler800/PrimesUltra.csv', 'r') as f: 
+#    with open('/home/matt/Programming/Euler800/Primes-beta.csv', 'r') as f:
+    with open('/home/matt/Programming/Euler800/PrimesUltra.csv', 'r') as f:
         reader = csv.reader(f)
         data = list(reader)
         data = [eval(i) for i in data[0]]
         data_array1 = data.copy()
         data_array2 = data.copy()
-        #data_array1 = data_array1[0:4]
-        data_array2 = data_array2[0:664603]  #23190]
-        
-    p = Process(target=solveC, args=(1, data_array1[1::4], data_array2[1::],))
-    q = Process(target=solveC, args=(2, data_array1[2::4], data_array2[2::],))
-    r = Process(target=solveC, args=(3, data_array1[3::4], data_array2[3::],))
-    s = Process(target=solveC, args=(4, data_array1[4::4], data_array2[4::],))
-    p.start()
-    q.start()
-    r.start()
-    s.start()
-    p.join()
-    q.join()
-    r.join()
-    s.join()
-    print("--- %s seconds ---" % (time.time() - begin_time))
-        
-    
-""" 
+
     for i in range(0, len(data_array1)):
-    
-        data_array2.pop(0)
-        data_array2.pop(0)
-        for j in range(len(data_array2)-1,-1,-1):
-            if ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) > upper):
+        loop_time = time.time()
+        if len(data_array2) > 1:
+            data_array2.pop(0)
+        if len(data_array2) <= 1:
+            break
+        for j in range(len(data_array2) - 1, -1, -1):
+            if ((pow(data_array2[j], data_array1[i]) * pow(data_array1[i], data_array2[j])) > upper):
+                #countDownTime = time.time()
                 print("Counting down: " +str(j))
+                data_array2.pop(j)
+                #print("Counting Down  %s" % (time.time() - countDownTime))
                 continue
-                #totalCount += 1
-            elif ((pow(data_array2[j],data_array1[i])*pow(data_array1[i],data_array2[j])) <= upper):
-                print("Found the uppper limit: ", str(j+1))
-                table = open("800800Grail.csv", "a")
-                table.writelines("{0}:{1}\n".format(data_array1[i],j+1))
+                # totalCount += 1
+            elif ((pow(data_array2[j], data_array1[i]) * pow(data_array1[i], data_array2[j])) <= upper):
+                print("Writing to file!")
+                print("Writing a value --- %s seconds ---" % (time.time() - loop_time))
+                table = open("800800GrailDesktop.csv", "a")
+                table.writelines("{0}:{1}\n".format(data_array1[i], j + 1))
                 table.close()
-                #data_array2.pop(0)
-                #data_array2.pop(0)
-                #data_array2.pop(0)
                 break
-        
-    print("--- %s seconds ---" % (time.time() - start_time))
-    
-"""
