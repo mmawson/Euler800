@@ -91,7 +91,7 @@ if __name__ == '__main__':
           # The following statement finds the maximum q for a given p which satisfies q^p*p^2 <= 800800^800800.  
           if ((pow(data_array2[mid], data_array1[i]) * pow(data_array1[i], data_array2[mid])) <= upper) and ((pow(data_array2[mid+1], data_array1[i]) * pow(data_array1[i], data_array2[mid+1])) > upper):
             # It follows that all primes less than q will also satisfiy the inequality, so we count them and save them to file.
-            print(f'Found an answer for all primes, q for which {data_array1[i]}^q * q^{data_array1[i]} <= 800800^800800\nmax q = ' +str(mid+1))
+            print(f'Found an answer for all primes, q for which {data_array1[i]}^q * q^{data_array1[i]} <= 800800^800800\nmax q = {data_array2[mid+1]}\nThere are {(mid+1)} primes less than or equal to {data_array2[mid+1]}')
             #print("Writing a value --- %s seconds ---" % (time.time() - loop_time))
             table = open("800800Result.csv", "a")
             table.writelines("{0}:{1}\n".format(data_array1[i], mid+1))
