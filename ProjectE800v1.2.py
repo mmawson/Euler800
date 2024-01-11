@@ -81,10 +81,9 @@ if __name__ == '__main__':
           break
         else:
           data_array2.pop(0)  # This line advances data_array2 so that p < q since p and q cannot be equal
-        #  The folowing block sets up the search space
-        low = len(data_array1) - len(data_array2)
+        #  The folowing 2 lines set up the search space
+        low = 0
         high = len(data_array2)-1
-        mid = 0
         # Perform binary search on high - low
         while low <= high:
           mid = (high + low) // 2
