@@ -57,8 +57,48 @@ Created on Thu Dec  7 11:07:31 2023
 
 import csv
 import time
+from multiprocessing import Process
 
 upper = 800800 ** 800800
+
+def solveC(procNum, data_array1, data_array2):
+     # Start with p = 2 and find q for which p^q*q^p is just less than 800800^800800
+  for i in range(0, len(data_array1)):
+    if data_array1[i] > 420331:  # We know the largest value of p (variable i) is when x^2x = 800800^800800.  So i can never be more than 420331  
+      break
+    else:
+      data_array2.pop(0)
+    # This line advances data_array2 so that p < q since p and q cannot be equal
+    #  The folowing 5 lines set up the search space.  It gets smaller every iteration
+    low = 0
+    if i == 0:
+      high = len(data_array2)-1
+    else:
+      high = mid
+    # Perform binary search on high - low
+    while low <= high:
+      mid = (high + low) // 2
+      # The following statement finds the maximum q for a given p which satisfies q^p*p^2 <= 800800^800800.  
+      if ((pow(data_array2[mid], data_array1[i]) * pow(data_array1[i], data_array2[mid])) <= upper) and ((pow(data_array2[mid+1], data_array1[i]) * pow(data_array1[i], data_array2[mid+1])) > upper):
+        # It follows that all primes less than q will also satisfiy the inequality, so we count them and save them to file.
+        print(f'Found an answer for all primes, q for which {data_array1[i]}^q * q^{data_array1[i]} <= 800800^800800\nmax q = {data_array2[mid+1]}\nThere are {(mid+1)} primes less than or equal to {data_array2[mid+1]}')
+        table = open("800800Result" + str(procNum) +".csv", "a")
+        table.writelines("{0}:{1}\n".format(data_array1[i], mid+1))
+        table.close()
+        data_array2.pop(0)
+        data_array2.pop(0)
+        data_array2.pop(0)
+        break
+      if ((pow(data_array2[mid], data_array1[i]) * pow(data_array1[i], data_array2[mid])) > upper):
+        # if (p^q*q^p > upper) then drop the top half
+        # print("Doing binary serach: " +str(mid))
+        high = mid - 1
+      else:
+        # if (p^q*q^p > upper) then drop the bottom half
+        # print("Doing binary serach: " +str(mid))
+        low = mid +1
+  return
+   
 
 if __name__ == '__main__':
     
@@ -68,12 +108,35 @@ if __name__ == '__main__':
   
   # This block opens the file PrimesUltra which contains 1013281 primes which is just enough q for 2^q*q^2 > 800800^800800  
   with open('/home/matt/Programming/Euler800/PrimesUltra.csv', 'r') as f:
-      reader = csv.reader(f)
-      data = list(reader)
-      data = [eval(i) for i in data[0]]
-      data_array1 = data.copy()
-      data_array2 = data.copy()
+    reader = csv.reader(f)
+    data = list(reader)
+    data = [eval(i) for i in data[0]]
+    data_array1 = data.copy()
+    data_array2 = data.copy()
 
+
+  p = Process(target=solveC, args=(1, data_array1[0::4], data_array2,))
+  q = Process(target=solveC, args=(2, data_array1[1::4], data_array2[1::],))
+  r = Process(target=solveC, args=(3, data_array1[2::4], data_array2[2::],))
+  s = Process(target=solveC, args=(4, data_array1[3::4], data_array2[3::],))
+  p.start()
+  q.start()
+  r.start()
+  s.start()
+  p.join()
+  q.join()
+  r.join()
+  s.join()
+
+  filenames = ['800800Result1.csv', '800800Result2.csv', '800800Result3.csv', '800800Result4.csv']
+  with open('800800Result', 'w') as outfile:
+    for fname in filenames:
+        with open(fname) as infile:
+            outfile.write(infile.read())
+
+  print("Total runtime --- %s seconds ---" % (time.time() - begin_time))
+
+'''
   # Start with p = 2 and find q for which p^q*q^p is just less than 800800^800800
   for i in range(0, len(data_array1)):
         loop_time = time.time()   # start a timer
@@ -84,9 +147,9 @@ if __name__ == '__main__':
         #  The folowing 5 lines set up the search space.  It gets smaller every iteration
         low = 0
         if i == 0:
-          high = len(data_array2)-1
+           high = len(data_array2)-1
         else:
-          high = mid + 1
+          high = mid
         # Perform binary search on high - low
         while low <= high:
           mid = (high + low) // 2
@@ -107,5 +170,4 @@ if __name__ == '__main__':
             # if (p^q*q^p > upper) then drop the bottom half
             # print("Doing binary serach: " +str(mid))
             low = mid +1
-
-  print("Total runtime --- %s seconds ---" % (time.time() - begin_time))
+'''
